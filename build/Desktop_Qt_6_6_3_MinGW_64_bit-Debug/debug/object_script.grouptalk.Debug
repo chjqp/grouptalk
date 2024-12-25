@@ -1,0 +1,10 @@
+debug/main.o
+debug/mainwidget.o
+debug/mainwindow.o
+debug/recvbox.o
+debug/userwidget.o
+debug/qrc_rc.o
+debug/moc_mainwidget.o
+debug/moc_mainwindow.o
+debug/moc_recvbox.o
+debug/moc_userwidget.o

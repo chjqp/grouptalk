@@ -1,0 +1,10 @@
+release/main.o
+release/mainwidget.o
+release/mainwindow.o
+release/recvbox.o
+release/userwidget.o
+release/qrc_rc.o
+release/moc_mainwidget.o
+release/moc_mainwindow.o
+release/moc_recvbox.o
+release/moc_userwidget.o

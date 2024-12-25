@@ -1,5 +1,6 @@
 #include "mainwidget.h"
 #include "ui_mainwidget.h"
+#include "recvbox.h"
 #include <QPixmap>
 #include <QScrollBar>
 #include <QFrame>
@@ -57,11 +58,8 @@ MainWidget::MainWidget(QWidget *parent)
     chatListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     chatListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-    // 添加一些示例聊天记录
-    addChatItem("Hello, how are you?");
-    addChatItem("I'm good, thank you!");
-    addChatItem("What about you?");
-    addChatItem("I'm doing well, thanks for asking!");
+    // 连接发送按钮的点击信号到发送消息的槽函数
+    connect(toolSendButton, &QPushButton::clicked, this, &MainWidget::sendMessage);
 
     // 将按钮和输入框置于最上层
     raisetools();
@@ -180,4 +178,37 @@ void MainWidget::raisetools()
     toolEmojiButton->raise();
     toolSendButton->raise();
     inputField->raise();
+}
+
+// 发送消息的槽函数
+void MainWidget::sendMessage()
+{
+    QString text = inputField->text(); // 获取输入框中的文本
+
+    if (text.isEmpty()) {
+        return; // 如果文本为空，则不发送消息
+    }
+
+    RecvBox* recvbox = new RecvBox(chatListWidget); // 创建新的 RecvBox
+
+    // 设置 RecvBox 的固定大小
+    recvbox->setFixedSize(400, 100); // 你可以根据需要调整大小
+
+    QListWidgetItem *item = new QListWidgetItem(chatListWidget);
+    item->setSizeHint(recvbox->size()); // 设置 QListWidgetItem 的大小提示为 RecvBox 的大小
+    chatListWidget->addItem(item);
+    chatListWidget->setItemWidget(item, recvbox);
+
+    QPixmap p(":/img/head1.png"); // 设置头像
+    recvbox->setAvatar(p);
+    recvbox->setBackgroundColor(QColor("#666666"));
+    recvbox->setBordetRadius(10);
+    recvbox->setTextColor(Qt::black);
+
+    recvbox->setText(text); // 设置消息文本
+
+    inputField->clear(); // 清空输入框
+
+    // 将滚动条值设置为最大值，以确保内容滚动到最底部
+    chatListWidget->scrollToBottom();
 }

@@ -12,16 +12,19 @@ SOURCES += \
     main.cpp \
     mainwidget.cpp \
     mainwindow.cpp \
+    recvbox.cpp \
     userwidget.cpp
 
 HEADERS += \
     mainwidget.h \
     mainwindow.h \
+    recvbox.h \
     userwidget.h
 
 FORMS += \
     mainwidget.ui \
     mainwindow.ui \
+    recvbox.ui \
     userwidget.ui
 
 # Default rules for deployment.

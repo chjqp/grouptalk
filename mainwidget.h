@@ -43,6 +43,7 @@ private:
     void addFriend(const QString& name, const QString& title, const QPixmap& avatar);
     void addChatItem(const QString& message);
     void raisetools(); // 新增方法声明
+    void sendMessage();
 };
 
 #endif // MAINWIDGET_H
