@@ -40,6 +40,7 @@ private:
     QString loadImageAsBase64(const QString &imagePath);
     void addFriend(const QString& name, const QString& title, const QPixmap& avatar);
     void addChatItem(const QString& message);
+    void raiseButtons();
 };
 
 #endif // MAINWIDGET_H

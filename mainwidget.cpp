@@ -20,24 +20,23 @@ MainWidget::MainWidget(QWidget *parent)
     setupButton(toolVideoButton, ":/img/toolvideo.png", QRect(1310, 62, 32, 32));
 
     toolExtraButton = new QPushButton(this);
-    setupButton(toolExtraButton, ":/img/toolextra.png", QRect(324, 1030, 24, 24));
+    setupButton(toolExtraButton, ":/img/toolextra.png", QRect(324, height() - 50, 24, 24));
 
     toolPicButton = new QPushButton(this);
-    setupButton(toolPicButton, ":/img/toolpic.png", QRect(361, 1030, 24, 24));
+    setupButton(toolPicButton, ":/img/toolpic.png", QRect(361, height() - 50, 24, 24));
 
     toolEmojiButton = new QPushButton(this);
-    setupButton(toolEmojiButton, ":/img/toolemojy.png", QRect(396, 1030, 24, 24));
+    setupButton(toolEmojiButton, ":/img/toolemojy.png", QRect(396, height() - 50, 24, 24));
 
     toolSendButton = new QPushButton(this);
-    setupButton(toolSendButton, ":/img/toolsend.png", QRect(1113, 1030, 24, 24));
+    setupButton(toolSendButton, ":/img/toolsend.png", QRect(1113, height() - 50, 24, 24));
 
     // 初始化好友列表布局
     friendsListWidget = new QListWidget(this);
-    friendsListWidget->setGeometry(0, 37, 306, 1043);
+    friendsListWidget->setGeometry(0, 37, 306, height() - 37);
     friendsListWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     friendsListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     friendsListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-
 
     // 添加一些示例好友
     QPixmap avatar1(":/img/head1.png");
@@ -46,9 +45,10 @@ MainWidget::MainWidget(QWidget *parent)
     for (int i = 0; i < 25; ++i) {
         addFriend("Bob", "Colleague", avatar2);
     }
+
     // 初始化聊天记录列表布局
     chatListWidget = new QListWidget(this);
-    chatListWidget->setGeometry(306, 37, 843, 1043);
+    chatListWidget->setGeometry(306, 37, 843, height() - 37);
     chatListWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     chatListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     chatListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -58,6 +58,9 @@ MainWidget::MainWidget(QWidget *parent)
     addChatItem("I'm good, thank you!");
     addChatItem("What about you?");
     addChatItem("I'm doing well, thanks for asking!");
+
+    // 将按钮置于最上层
+    raiseButtons();
 
     this->show();
 }
@@ -77,7 +80,6 @@ MainWidget::~MainWidget()
     delete friendsListWidget;
     delete chatListWidget;
 }
-
 
 // 添加好友到列表的函数
 void MainWidget::addFriend(const QString& name, const QString& title, const QPixmap& avatar)
@@ -103,6 +105,7 @@ void MainWidget::addChatItem(const QString& message)
     item->setText(message);
     chatListWidget->addItem(item);
 }
+
 // 封装的设置按钮图标的方法
 void MainWidget::setupButton(QPushButton *button, const QString &iconPath, const QRect &geometry)
 {
@@ -116,10 +119,16 @@ void MainWidget::setupButton(QPushButton *button, const QString &iconPath, const
     button->setIconSize(pixmap.size());
     button->setVisible(true);
     button->setEnabled(true);
-    qDebug() << button->objectName() << "geometry: " << button->geometry();
-    qDebug() << button->objectName() << "visible: " << button->isVisible();
-    qDebug() << button->objectName() << "enabled: " << button->isEnabled();
-    qDebug() << button->objectName() << "icon size: " << button->iconSize();
+}
+
+// 将所有按钮置于最上层
+void MainWidget::raiseButtons()
+{
+    toolVideoButton->raise();
+    toolExtraButton->raise();
+    toolPicButton->raise();
+    toolEmojiButton->raise();
+    toolSendButton->raise();
 }
 
 // 封装的加载图像并转换为 base64 编码字符串的方法
@@ -133,10 +142,22 @@ QString MainWidget::loadImageAsBase64(const QString &imagePath)
     image.save(&buffer, "PNG");
     return QString::fromLatin1(byteArray.toBase64().data());
 }
+
 // 重写 resizeEvent 函数以确保滚动区域大小随窗口调整
 void MainWidget::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
+
+    // 更新好友列表和聊天记录区域的大小和位置
     friendsListWidget->setGeometry(0, 37, 306, height() - 37);
     chatListWidget->setGeometry(306, 37, 843, height() - 37);
+
+    // 更新按钮的位置
+    toolExtraButton->setGeometry(324, height() - 50, 24, 24);
+    toolPicButton->setGeometry(361, height() - 50, 24, 24);
+    toolEmojiButton->setGeometry(396, height() - 50, 24, 24);
+    toolSendButton->setGeometry(1113, height() - 50, 24, 24);
+
+    // 确保按钮在窗口调整时始终位于最上层
+    raiseButtons();
 }
