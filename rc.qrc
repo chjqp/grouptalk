@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/toolemojy.png</file>
+        <file>img/head1.png</file>
+        <file>img/toolextra.png</file>
+        <file>img/toolinput.png</file>
+        <file>img/toolpic.png</file>
+        <file>img/toolsend.png</file>
+        <file>img/toolvideo.png</file>
+    </qresource>
+</RCC>
