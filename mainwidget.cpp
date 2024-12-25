@@ -31,6 +31,10 @@ MainWidget::MainWidget(QWidget *parent)
     toolSendButton = new QPushButton(this);
     setupButton(toolSendButton, ":/img/toolsend.png", QRect(1113, height() - 50, 24, 24));
 
+    // 创建输入框并设置背景图片
+    inputField = new QLineEdit(this);
+    setupInputField(inputField, ":/img/toolinput.png", QRect(439, height() - 50, 664, 36));
+
     // 初始化好友列表布局
     friendsListWidget = new QListWidget(this);
     friendsListWidget->setGeometry(0, 37, 306, height() - 37);
@@ -48,7 +52,7 @@ MainWidget::MainWidget(QWidget *parent)
 
     // 初始化聊天记录列表布局
     chatListWidget = new QListWidget(this);
-    chatListWidget->setGeometry(306, 37, 843, height() - 37);
+    chatListWidget->setGeometry(316, 123, 843, 963);
     chatListWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     chatListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     chatListWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -59,8 +63,8 @@ MainWidget::MainWidget(QWidget *parent)
     addChatItem("What about you?");
     addChatItem("I'm doing well, thanks for asking!");
 
-    // 将按钮置于最上层
-    raiseButtons();
+    // 将按钮和输入框置于最上层
+    raisetools();
 
     this->show();
 }
@@ -75,6 +79,7 @@ MainWidget::~MainWidget()
     delete toolPicButton;
     delete toolEmojiButton;
     delete toolSendButton;
+    delete inputField; // 释放输入框内存
     // 释放好友列表相关内存
     qDeleteAll(friendsList);
     delete friendsListWidget;
@@ -110,6 +115,7 @@ void MainWidget::addChatItem(const QString& message)
 void MainWidget::setupButton(QPushButton *button, const QString &iconPath, const QRect &geometry)
 {
     button->setGeometry(geometry);
+    button->setStyleSheet("border: none;"); // 去掉按钮边框
     QPixmap pixmap(iconPath);
     if (pixmap.isNull()) {
         qDebug() << "Could not create pixmap from" << iconPath;
@@ -119,16 +125,22 @@ void MainWidget::setupButton(QPushButton *button, const QString &iconPath, const
     button->setIconSize(pixmap.size());
     button->setVisible(true);
     button->setEnabled(true);
+    qDebug() << button->objectName() << "geometry: " << button->geometry();
+    qDebug() << button->objectName() << "visible: " << button->isVisible();
+    qDebug() << button->objectName() << "enabled: " << button->isEnabled();
+    qDebug() << button->objectName() << "icon size: " << button->iconSize();
 }
 
-// 将所有按钮置于最上层
-void MainWidget::raiseButtons()
+// 封装的设置输入框背景图片的方法
+void MainWidget::setupInputField(QLineEdit *inputField, const QString &iconPath, const QRect &geometry)
 {
-    toolVideoButton->raise();
-    toolExtraButton->raise();
-    toolPicButton->raise();
-    toolEmojiButton->raise();
-    toolSendButton->raise();
+    inputField->setGeometry(geometry);
+    inputField->setStyleSheet(QString("QLineEdit { border: none; border-image: url(%1) 0 0 0 0 stretch stretch; }").arg(iconPath)); // 去掉输入框边框
+    inputField->setVisible(true);
+    inputField->setEnabled(true);
+    qDebug() << inputField->objectName() << "geometry: " << inputField->geometry();
+    qDebug() << inputField->objectName() << "visible: " << inputField->isVisible();
+    qDebug() << inputField->objectName() << "enabled: " << inputField->isEnabled();
 }
 
 // 封装的加载图像并转换为 base64 编码字符串的方法
@@ -147,17 +159,25 @@ QString MainWidget::loadImageAsBase64(const QString &imagePath)
 void MainWidget::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-
-    // 更新好友列表和聊天记录区域的大小和位置
     friendsListWidget->setGeometry(0, 37, 306, height() - 37);
-    chatListWidget->setGeometry(306, 37, 843, height() - 37);
-
-    // 更新按钮的位置
+    chatListWidget->setGeometry(316, 123, 843, 963);
     toolExtraButton->setGeometry(324, height() - 50, 24, 24);
     toolPicButton->setGeometry(361, height() - 50, 24, 24);
     toolEmojiButton->setGeometry(396, height() - 50, 24, 24);
     toolSendButton->setGeometry(1113, height() - 50, 24, 24);
+    inputField->setGeometry(439, height() - 50, 664, 36);
 
-    // 确保按钮在窗口调整时始终位于最上层
-    raiseButtons();
+    // 确保按钮和输入框在窗口调整时保持在最上层
+    raisetools();
+}
+
+// 将所有按钮置于最上层
+void MainWidget::raisetools()
+{
+    toolVideoButton->raise();
+    toolExtraButton->raise();
+    toolPicButton->raise();
+    toolEmojiButton->raise();
+    toolSendButton->raise();
+    inputField->raise();
 }

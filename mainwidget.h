@@ -5,6 +5,8 @@
 #include <QScrollBar>
 #include <QListWidget>
 #include <QPushButton>
+#include <QLineEdit>
+#include <QList>
 #include "userwidget.h"
 namespace Ui {
 class MainWidget;
@@ -25,22 +27,22 @@ private:
     Ui::MainWidget *ui;
     QListWidget *friendsListWidget;
     QListWidget *chatListWidget;
-    QScrollBar *scrollBar;
 
     QPushButton *toolVideoButton;
     QPushButton *toolExtraButton;
     QPushButton *toolPicButton;
     QPushButton *toolEmojiButton;
     QPushButton *toolSendButton;
+    QLineEdit *inputField; // 新增输入框
 
     QList<UserWidget*> friendsList;
 
-    void setupScrollBar();
     void setupButton(QPushButton *button, const QString &iconPath, const QRect &geometry);
+    void setupInputField(QLineEdit *inputField, const QString &iconPath, const QRect &geometry); // 新增方法声明
     QString loadImageAsBase64(const QString &imagePath);
     void addFriend(const QString& name, const QString& title, const QPixmap& avatar);
     void addChatItem(const QString& message);
-    void raiseButtons();
+    void raisetools(); // 新增方法声明
 };
 
 #endif // MAINWIDGET_H
